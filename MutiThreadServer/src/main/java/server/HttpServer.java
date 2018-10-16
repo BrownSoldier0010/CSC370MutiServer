@@ -27,6 +27,7 @@ public class HttpServer {
 		Socket socket;
 
 		while (true) {
+			//Multi Thread here so we hand the thread the socket to complete its task
 			socket = serverSocket.accept();
 
 			// read http request
