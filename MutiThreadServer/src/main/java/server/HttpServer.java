@@ -4,29 +4,24 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class HttpServer implements Runnable {
-
-	public enum HttpMethod {
-		Get, Post
-	}
+public class HttpServer {
 
 	private ServerSocket serverSocket;
 
 	public HttpServer(int port) throws IOException {
-		serverSocket = new ServerSocket(port, Integer.MAX_VALUE);
+		serverSocket = new ServerSocket(port);
 	}
 
 	public void run() {
 
 		try {
 			while (true) {
-				Socket socket = serverSocket.accept(); 
-				MySocket socket2 = new MySocket(socket);
-				socket2.run();
+				Socket socket = serverSocket.accept();
+//                new MySocket(socket).run();
+                new Thread(new MySocket(socket)).start();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 }
