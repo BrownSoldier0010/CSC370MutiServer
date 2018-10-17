@@ -15,11 +15,11 @@ public class HttpServer {
 	public void run() {
 
 		try {
-			while (true) {
+//			while (true) {
 				Socket socket = serverSocket.accept();
 //                new MySocket(socket).run();
                 new Thread(new MySocket(socket)).start();
-			}
+//			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

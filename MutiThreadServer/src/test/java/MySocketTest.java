@@ -23,10 +23,10 @@ public class MySocketTest {
     private Random rand;
 
     @Test
-    public void RandomRequestSimulation() throws IOException {
+    public void RandomRequestSimulation() {
         new Thread(() -> server.run()).start();
 
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 2000; i++) {
             new Thread(() -> {
                 try {
                     HttpURLConnection con = (HttpURLConnection) new URL("http://localhost:1234/index.html").openConnection();
@@ -34,6 +34,7 @@ public class MySocketTest {
                     con.setRequestMethod("GET");
                     con.setRequestProperty("User-Agent", agents[rand.nextInt(5)]);
                     con.connect();
+                    con.disconnect();
                 } catch (IOException e) {}
             }).start();
         }
