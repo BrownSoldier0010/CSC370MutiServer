@@ -15,7 +15,7 @@ public class MySocket implements Runnable {
     private Map<String, String> headers;
     private OutputStream out;
     private SocketIOManager socketIO = new SocketIOManager();
-    Semaphore semaphore = new Semaphore(HttpServer.REQUEST_LIMIT);
+
 
     public MySocket(Socket socket) {
         this.socket = socket;
@@ -25,7 +25,7 @@ public class MySocket implements Runnable {
     public void run() {
         try {
             // read http request
-            semaphore.acquire();
+            HttpServer.semaphore.acquire();
             headers = socketIO.readHttpRequestHeader(socket.getInputStream());
             System.out.println(headers);
             // Determine request type
@@ -41,7 +41,7 @@ public class MySocket implements Runnable {
             e.printStackTrace();
         }
         finally {
-            semaphore.release();
+            HttpServer.semaphore.release();
         }
     }
 

@@ -10,19 +10,19 @@ import java.util.concurrent.Semaphore;
 public class HttpServer {
 	public static final int REQUEST_LIMIT = 10;
 	private ServerSocket serverSocket;
-
+	ExecutorService service = Executors.newFixedThreadPool(REQUEST_LIMIT);
+    static Semaphore semaphore = new Semaphore(HttpServer.REQUEST_LIMIT);
 	public HttpServer(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
 	}
 
 	public void run() {
-		ExecutorService service = Executors.newCachedThreadPool();
-
 		try {
+            while(true){
 				Socket socket = serverSocket.accept();
-// new MySocket(socket).run();
+                // new MySocket(socket).run();
 				service.submit(new MySocket(socket));
-//			}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
