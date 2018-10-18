@@ -12,15 +12,21 @@ public class HttpServer {
 	private ServerSocket serverSocket;
 	ExecutorService service = Executors.newFixedThreadPool(REQUEST_LIMIT);
     static Semaphore semaphore = new Semaphore(HttpServer.REQUEST_LIMIT);
-	public HttpServer(int port) throws IOException {
+    public static int requestCount;
+    private int port; 
+    
+    
+    public HttpServer(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
 	}
 
 	public void run() {
+		
 		try {
             while(true){
 				Socket socket = serverSocket.accept();
                 // new MySocket(socket).run();
+				
 				service.submit(new MySocket(socket));
 			}
 		} catch (IOException e) {

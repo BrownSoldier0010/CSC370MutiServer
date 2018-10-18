@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 
 public class MySocket implements Runnable {
 
@@ -15,24 +14,24 @@ public class MySocket implements Runnable {
     private Map<String, String> headers;
     private OutputStream out;
     private SocketIOManager socketIO = new SocketIOManager();
+    
+    public MySocket(Socket socket) {
+		this.socket = socket; 
+	}
 
 
 	@Override
 	public void run() {
 		try {
+			HttpServer.semaphore.acquire();
 			// read http request
 			headers = socketIO.readHttpRequestHeader(socket.getInputStream());
 			System.out.println(headers);
 			// Determine request type
 			requestMethod = determineRequestType(headers);
-//            String userClient = socketIO.getUserClient(headers.get("User-Agent"));
-//            System.out.println("User Agent String: " + userClient);
             addClientCount();
-			
 			getRequest(headers, socket.getOutputStream());
-//            Main.countOfVisitedClient.forEach((k, v) -> System.out.println(k + " - " + v));
             System.out.println();
-
             socket.close();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -75,13 +74,6 @@ public class MySocket implements Runnable {
 	}
 
     private synchronized void addClientCount() {
-//        if (Main.countOfVisitedClient.containsKey(client)) {
-//            int count = Main.countOfVisitedClient.get(client);
-//            Main.countOfVisitedClient.put(client, ++count);
-//        }
-//        else {
-//            Main.countOfVisitedClient.put(client, 1);
-//        }
     	HttpServer.requestCount += 1; 
     }
 

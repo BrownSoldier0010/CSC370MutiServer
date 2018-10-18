@@ -1,22 +1,15 @@
-import org.junit.Before;
-import org.junit.Test;
-import server.HttpServer;
-import server.Main;
-import server.SocketIOManager;
-
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import server.HttpServer;
+import server.SocketIOManager;
 
 public class MySocketTest {
 
-	// private static final int requestCount = 10;
-	// private static final int requestSendTime = 1000;
 	private SocketIOManager socketIOManager;
 	private HttpServer server;
 	private Random rand;
