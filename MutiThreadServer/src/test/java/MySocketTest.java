@@ -54,7 +54,10 @@ public class MySocketTest {
 
         String result = this.readContent(con.getErrorStream());
 //        System.out.println(result);
-        assertEquals("<p>File not found</p>\n", result);
+        assertEquals("<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<h1>File Not Found</h1>\n" +
+                "</html>", result);
     }
 
     @Test
