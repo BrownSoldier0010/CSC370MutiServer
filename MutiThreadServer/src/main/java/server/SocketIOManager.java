@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class SocketIOManager {
 
-    public synchronized Map<String, String> readHttpRequestHeader(InputStream in) {
+    public Map<String, String> readHttpRequestHeader(InputStream in) {
         String rawHeaders = readToTerminalSymbol(in, "\r\n\r\n");
         Map<String, String> headers = new HashMap<>();
         String[] splitHeaders = rawHeaders.split("\r\n");
@@ -55,7 +55,7 @@ public class SocketIOManager {
         return body;
     }
 
-    public synchronized void writeHttpResponseHeader(OutputStream out, int responseCode, long fileLength, String fileExtension) {
+    public void writeHttpResponseHeader(OutputStream out, int responseCode, long fileLength, String fileExtension) {
         String responseHeader;
         switch (responseCode) {
             case 200:
@@ -83,7 +83,7 @@ public class SocketIOManager {
         }
     }
 
-    public synchronized String getUserClient(String userAgent) throws IOException {
+    public String getUserClient(String userAgent) throws IOException {
         URL url = new URL("https://api.whatismybrowser.com/api/v2/user_agent_parse");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -106,7 +106,6 @@ public class SocketIOManager {
 
         Gson gson = new Gson();
         LinkedTreeMap response = gson.fromJson(content, LinkedTreeMap.class);
-//        System.out.println(response);
 
         return ((LinkedTreeMap)response.get("parse")).get("software_name").toString();
     }
@@ -120,6 +119,8 @@ public class SocketIOManager {
         int i;
 
         try {
+        	
+        	System.out.println(in.available());
             while ((i = in.read()) != -1) {
                 header += (char) i;
                 if (header.contains(terminalSymbol)) {
@@ -127,9 +128,11 @@ public class SocketIOManager {
                 }
             }
         } catch (IOException e) {
+        	e.printStackTrace();
             // return that header cannot be read, internal server error
             return null;
         }
+        System.out.println("Error found");
         return null;
     }
 

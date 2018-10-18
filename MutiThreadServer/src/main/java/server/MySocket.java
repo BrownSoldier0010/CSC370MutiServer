@@ -27,10 +27,12 @@ public class MySocket implements Runnable {
 			System.out.println(headers);
 			// Determine request type
 			requestMethod = determineRequestType(headers);
-            String userClient = socketIO.getUserClient(headers.get("User-Agent"));
-            addClientCount(userClient);
+//            String userClient = socketIO.getUserClient(headers.get("User-Agent"));
+//            System.out.println("User Agent String: " + userClient);
+            addClientCount();
+			
 			getRequest(headers, socket.getOutputStream());
-            Main.countOfVisitedClient.forEach((k, v) -> System.out.println(k + " - " + v));
+//            Main.countOfVisitedClient.forEach((k, v) -> System.out.println(k + " - " + v));
             System.out.println();
 
             socket.close();
@@ -39,18 +41,18 @@ public class MySocket implements Runnable {
         }
 	}
 
-	private synchronized void getRequest(Map<String, String> headers, OutputStream out) throws IOException {
+	private void getRequest(Map<String, String> headers, OutputStream out) throws IOException {
         String method = headers.get("CMD");
         System.out.println(method);
 		String[] parts = method.split(" ");
-//		String path = "C:/Users/eparr/Neumont/Quarter 5/CSC280/Static Website" + parts[1];
-		String path = "/Users/Tony/Documents/Code/Java/workspace/CSC280/Static Website" + parts[1];
+		String path = "C:/Users/eparr/Neumont/Quarter 5/CSC280/Static Website" + parts[1];
+//		String path = "/Users/Tony/Documents/Code/Java/workspace/CSC280/Static Website" + parts[1];
 		File file = new File(path);
 		String line = "";
 
 		if (!file.exists() || parts[1].equals("/")) {
-//			File error = new File("C:/Users/eparr/Neumont/Quarter 5/CSC280/Static Website/filenotfound.html");
-			File error = new File("/Users/Tony/Documents/Code/Java/workspace/CSC280/Static Website/filenotfound.html");
+			File error = new File("C:/Users/eparr/Neumont/Quarter 5/CSC280/Static Website/filenotfound.html");
+//			File error = new File("/Users/Tony/Documents/Code/Java/workspace/CSC280/Static Website/filenotfound.html");
 			socketIO.writeHttpResponseHeader(out, 404, error.length(), "na");
 			FileInputStream fileIO = new FileInputStream(error);
 			int i;
@@ -71,17 +73,18 @@ public class MySocket implements Runnable {
 		}
 	}
 
-    private synchronized void addClientCount(String client) {
-        if (Main.countOfVisitedClient.containsKey(client)) {
-            int count = Main.countOfVisitedClient.get(client);
-            Main.countOfVisitedClient.put(client, ++count);
-        }
-        else {
-            Main.countOfVisitedClient.put(client, 1);
-        }
+    private synchronized void addClientCount() {
+//        if (Main.countOfVisitedClient.containsKey(client)) {
+//            int count = Main.countOfVisitedClient.get(client);
+//            Main.countOfVisitedClient.put(client, ++count);
+//        }
+//        else {
+//            Main.countOfVisitedClient.put(client, 1);
+//        }
+    	HttpServer.requestCount += 1; 
     }
 
-	private synchronized HttpMethod determineRequestType(Map<String, String> headers2) {
+	private HttpMethod determineRequestType(Map<String, String> headers2) {
 		String method = headers.get("CMD");
 		String[] parts = method.split(" ");
 		System.out.println(parts[0]);

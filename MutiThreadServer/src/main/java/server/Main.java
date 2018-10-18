@@ -11,5 +11,8 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		HttpServer server = new HttpServer(1234);
 		server.run();
+		
+		countOfVisitedClient.entrySet().stream().forEach(e -> 
+			System.out.println(e.getKey() + " - " + e.getValue())); 
 	}
 }
