@@ -6,18 +6,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 public class MySocket implements Runnable {
 
-	private Socket socket;
-	private HttpMethod requestMethod;
-	private Map<String, String> headers;
-	private OutputStream out;
-	private SocketIOManager socketIO = new SocketIOManager();
+    private Socket socket;
+    private HttpMethod requestMethod;
+    private Map<String, String> headers;
+    private OutputStream out;
+    private SocketIOManager socketIO = new SocketIOManager();
 
-	public MySocket(Socket socket) {
-		this.socket = socket;
-	}
 
 	@Override
 	public void run() {
@@ -36,10 +34,13 @@ public class MySocket implements Runnable {
             System.out.println();
 
             socket.close();
-		} catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-	}
+        finally {
+            HttpServer.semaphore.release();
+        }
+    }
 
 	private void getRequest(Map<String, String> headers, OutputStream out) throws IOException {
         String method = headers.get("CMD");
